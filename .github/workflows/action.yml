@@ -2,18 +2,22 @@ name: action
 
 on: [push]
 
-env:
-  DOTNET_VERSION: '8.x'
-
 jobs:
   build-and-test:
     
     runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: '8.x'
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
+        id: stepid
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
+          cache-dependency-path: subdir/packages.lock.json
 
       - name: dotnet restore
         run: dotnet restore --locked-mode
