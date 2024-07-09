@@ -27,5 +27,4 @@ jobs:
           cd src/Blank.Presentation
           dotnet build --configuration Release --no-restore
       - run: |
-          cd tests
-          dotnet test
+          dotnet test --filter Tests --logger trx --collect "Code Coverage"
