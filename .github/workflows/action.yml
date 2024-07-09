@@ -12,22 +12,8 @@ env:
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
-  restore:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        id: stepid
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-          cache: true
-          cache-dependency-path: '**/packages.lock.json'
-
-      - run: dotnet restore --locked-mode
-  
   build:
     runs-on: ubuntu-latest
-    needs: [ restore ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -36,11 +22,12 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           cache: true
           cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore --locked-mode
       - run: dotnet build --configuration Release --no-restore
 
   test:
     runs-on: ubuntu-latest
-    needs: [ restore ]
+    needs: [ build ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -49,4 +36,5 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           cache: true
           cache-dependency-path: '**/packages.lock.json'
+      - run: dotnet restore --locked-mode
       - run: dotnet test --no-restore --verbosity normal
