@@ -3,9 +3,9 @@ name: action
 on:
   push:
     paths:
+      - '**/workflows/*.yml'
       - '**.cs'
       - '**.csproj'
-      - '**/action.yml'
 
 jobs:
   build-and-test:
@@ -26,8 +26,6 @@ jobs:
 
       - run: dotnet restore --locked-mode
 
-      - name: dotnet build
-        run: dotnet build --configuration Release --no-restore
+      - run: dotnet build --configuration Release --no-restore
 
-      - name: dotnet test
-        run: dotnet test --no-restore --verbosity normal
+      - run: dotnet test --no-restore --verbosity normal
