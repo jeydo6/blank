@@ -28,3 +28,4 @@ jobs:
           dotnet build --configuration Release --no-restore
       - run: |
           dotnet test --filter Tests --logger trx --collect "Code Coverage"
+
