@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{393D27
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BAFCF695-0A21-4356-8034-29011AD5E81E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blank.Tests", "Blank.Tests\Blank.Tests.csproj", "{E5D02BBC-5E5D-4E65-AB1A-F33C1900CC1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,8 +26,13 @@ Global
 		{F91EA5A3-8B72-41DF-8837-9F52133C8077}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F91EA5A3-8B72-41DF-8837-9F52133C8077}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F91EA5A3-8B72-41DF-8837-9F52133C8077}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5D02BBC-5E5D-4E65-AB1A-F33C1900CC1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5D02BBC-5E5D-4E65-AB1A-F33C1900CC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5D02BBC-5E5D-4E65-AB1A-F33C1900CC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5D02BBC-5E5D-4E65-AB1A-F33C1900CC1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F91EA5A3-8B72-41DF-8837-9F52133C8077} = {AB679351-1786-4725-8127-7C1B6698FBB3}
+		{E5D02BBC-5E5D-4E65-AB1A-F33C1900CC1B} = {BAFCF695-0A21-4356-8034-29011AD5E81E}
 	EndGlobalSection
 EndGlobal
