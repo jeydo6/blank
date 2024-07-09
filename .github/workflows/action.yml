@@ -27,5 +27,8 @@ jobs:
           cd src/Blank.Presentation
           dotnet build --configuration Release --no-restore
       - run: |
-          dotnet test --filter Tests --logger trx --collect "Code Coverage"
-
+          dotnet test --logger trx --collect "Code Coverage" --verbosity normal --results-directory dotnet-test-results.trx
+      - uses: actions/upload-artifact@v4
+        with:
+            name: dotnet-test-results.trx
+            path: dotnet-test-results.trx
