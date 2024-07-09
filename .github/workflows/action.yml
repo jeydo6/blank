@@ -5,7 +5,7 @@ on:
     paths:
       - '**.cs'
       - '**.csproj'
-      - 'action.yml'
+      - '**/action.yml'
 
 jobs:
   build-and-test:
