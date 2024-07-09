@@ -17,7 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
-        id: stepid
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           cache: true
@@ -27,8 +26,9 @@ jobs:
           cd src/Blank.Presentation
           dotnet build --configuration Release --no-restore
       - run: |
-          dotnet test --logger trx --collect "Code Coverage" --verbosity normal --results-directory dotnet-test-results
+          dotnet test --logger trx --verbosity normal --results-directory dotnet-test-results
       - uses: actions/upload-artifact@v4
         with:
             name: dotnet-test-results
             path: dotnet-test-results
+            retention-days: 7
