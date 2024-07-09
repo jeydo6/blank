@@ -1,0 +1,22 @@
+name: action
+
+on: [push]
+
+env:
+  DOTNET_VERSION: '8.x'
+
+jobs:
+  build-and-test:
+    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: dotnet restore
+        run: dotnet restore --locked-mode
+
+      - name: dotnet build
+        run: dotnet build --configuration Release --no-restore

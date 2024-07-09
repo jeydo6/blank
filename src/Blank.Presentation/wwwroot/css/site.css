@@ -1,0 +1,17 @@
+body {
+    height: 95vh;
+}
+
+div.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#content {
+    padding: 1rem;
+
+    border: black 0.1rem solid;
+    border-radius: 1rem;
+}
