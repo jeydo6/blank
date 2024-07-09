@@ -24,8 +24,8 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
       - run: dotnet restore --locked-mode
       - run: |
-          cd src/Blank.Presentation
+          cd /src/Blank.Presentation
           dotnet build --configuration Release --no-restore
       - run: |
-          cd tests
+          cd /tests
           dotnet test
