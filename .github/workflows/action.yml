@@ -1,6 +1,11 @@
 name: action
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.cs'
+      - '**.csproj'
 
 jobs:
   build-and-test:
@@ -23,3 +28,6 @@ jobs:
 
       - name: dotnet build
         run: dotnet build --configuration Release --no-restore
+
+      - name: dotnet test
+        run: dotnet test --no-restore --verbosity normal
