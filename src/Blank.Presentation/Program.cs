@@ -4,8 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Blank.Presentation;
 
-// 21:29
-
 internal static class Program
 {
     public static async Task Main(string[] args)

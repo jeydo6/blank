@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-test:
     
-    runs-on: ubuntu-latest
+    runs-on: [ default ]
     env:
       DOTNET_VERSION: '8.x'
       NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
