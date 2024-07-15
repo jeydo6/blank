@@ -16,15 +16,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-          cache: true
-          cache-dependency-path: '**/packages.lock.json'
-      - run: dotnet restore --locked-mode
-      - run: |
-          cd src/Blank.Presentation
-          dotnet build --configuration Release --no-restore
+      # - uses: actions/setup-dotnet@v4
+      #   with:
+      #     dotnet-version: ${{ env.DOTNET_VERSION }}
+      #     cache: true
+      #     cache-dependency-path: '**/packages.lock.json'
+      # - run: dotnet restore --locked-mode
+      # - run: |
+      #     cd src/Blank.Presentation
+      #     dotnet build --configuration Release --no-restore
       # - run: |
       #     dotnet test --logger trx --results-directory dotnet-test-results
       # - uses: actions/upload-artifact@v4
@@ -45,7 +45,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output - . | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+
+      # - name: Build Docker image
+      #   run: |
+      #     docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output - . | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
           
       # > 
 
