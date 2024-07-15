@@ -49,7 +49,6 @@ jobs:
           context: .
           platforms: linux/amd64
           tags: jeydo6/blank:latest
-          push: false
 
       - name: Copy Docker image to remote server
         run: |
