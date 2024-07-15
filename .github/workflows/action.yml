@@ -42,17 +42,16 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          platforms: linux/amd64
-          tags: jeydo6/blank:latest
-
-      - name: Copy Docker image to remote server
         run: |
-          docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          docker buildx build --tag jeydo6/blank:latest --output - . > ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+
+      # - name: Copy Docker image to remote server
+      #   run: |
+      #     docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+
+      # - name: Run remote command
+      #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
+        # run: docker buildx build --file src/Blank.Presentation/Dockerfile --tag jeydo6/blank:latest --output - . > ssh root@production docker load
 
       # - name: Run remote command
       #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
