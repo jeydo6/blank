@@ -39,14 +39,20 @@ jobs:
           echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker image
+      
+      - name: Build and Push Docker image
         run: |
-          cd src/Blank.Presentation
-          docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker - . | ssh -o ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          docker build --platform linux/amd64 --tag jeydo6/blank:latest .
+          docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+
+
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+
+      # - name: Build Docker image
+      #   run: |
+      #     cd src/Blank.Presentation
+      #     docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker - . | ssh -o ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
 
       # - name: Build Docker image
       #   run: |
