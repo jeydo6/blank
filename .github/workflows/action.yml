@@ -47,14 +47,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: src/Blank.Presentation/Dockerfile
           platforms: linux/amd64
           tags: jeydo6/blank:latest
           push: false
 
       - name: Copy Docker image to remote server
         run: |
-          docker save jeydo6/blank:latest | bzip2 | ssh root@production docker load
+          docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
 
       # - name: Run remote command
       #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
