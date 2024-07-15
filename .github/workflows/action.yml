@@ -45,7 +45,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker - | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          cd src/Blank.Presentation
+          docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
 
       # - name: Build Docker image
       #   run: |
