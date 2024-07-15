@@ -43,7 +43,7 @@ jobs:
       - name: Build and Push Docker image
         run: |
           docker build --platform linux/amd64 --tag jeydo6/blank:latest .
-          docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          docker save jeydo6/blank:latest | bzip2 | pv | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
 
 
       # - name: Set up Docker Buildx
