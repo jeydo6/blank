@@ -4,6 +4,9 @@ on:
   create:
     branches:
       - 'release/**'
+  push:
+    branches:
+      - 'release/**'
 
 jobs:
   build-and-push-docker-image:
@@ -21,7 +24,7 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          echo ${GITHUB_REF##*/}
+          echo ${{ github.ref_name }}
           echo ${{ github.ref }}
           docker build --platform linux/amd64 --tag ${{ github.repository }}:latest .
           docker save ${{ github.repository }}:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
