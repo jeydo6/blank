@@ -7,19 +7,18 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG TARGETARCH
 ARG BUILD_CONFIGURATION=Release
 
-WORKDIR /src
-COPY src/Blank.Presentation/Blank.Presentation.csproj Blank.Presentation/
-RUN dotnet restore Blank.Presentation/Blank.Presentation.csproj -a $TARGETARCH
+WORKDIR /app
 
-COPY src/ .
-RUN ls .
-WORKDIR /src/Blank.Presentation
+COPY [ "src/Blank.Presentation/Blank.Presentation.csproj", "src/Blank.Presentation/" ]
+RUN dotnet restore "src/Blank.Presentation/Blank.Presentation.csproj" -a $TARGETARCH --use-lock-file --locked-mode
 
-RUN dotnet build "Blank.Presentation.csproj" -c $BUILD_CONFIGURATION --no-restore -a $TARGETARCH -o /app/build
+COPY . .
+
+RUN dotnet build "src/Blank.Presentation/Blank.Presentation.csproj" -c $BUILD_CONFIGURATION -a $TARGETARCH --no-restore -o build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Blank.Presentation.csproj" -c $BUILD_CONFIGURATION --no-restore -a $TARGETARCH -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "src/Blank.Presentation/Blank.Presentation.csproj" -c $BUILD_CONFIGURATION -a $TARGETARCH --no-restore -o publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
