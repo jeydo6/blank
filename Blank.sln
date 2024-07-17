@@ -8,13 +8,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{393D27
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		Dockerfile = Dockerfile
-		.github\workflows\action.yml = .github\workflows\action.yml
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BAFCF695-0A21-4356-8034-29011AD5E81E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blank.Tests", "tests\Blank.Tests\Blank.Tests.csproj", "{00CD4D61-4606-4651-B22C-CC1DC3087BA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{B3E497F0-0933-4114-A355-4998B2231C2E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\action.yml = .github\workflows\action.yml
+		.github\workflows\build-backend.yml = .github\workflows\build-backend.yml
+		.github\workflows\deploy-release.yml = .github\workflows\deploy-release.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,5 +40,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F91EA5A3-8B72-41DF-8837-9F52133C8077} = {AB679351-1786-4725-8127-7C1B6698FBB3}
 		{00CD4D61-4606-4651-B22C-CC1DC3087BA6} = {BAFCF695-0A21-4356-8034-29011AD5E81E}
+		{B3E497F0-0933-4114-A355-4998B2231C2E} = {393D2734-A2CB-4343-AAAA-AA13CB13A563}
 	EndGlobalSection
 EndGlobal

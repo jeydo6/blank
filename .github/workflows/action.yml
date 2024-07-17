@@ -1,72 +1,72 @@
-name: action
-
-on:
-  push:
-    paths:
-      - '**/workflows/*.yml'
-      - '**.cs'
-      - '**.csproj'
-
-env:
-  DOTNET_VERSION: '8.x'
-  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
-
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      # - uses: actions/setup-dotnet@v4
-      #   with:
-      #     dotnet-version: ${{ env.DOTNET_VERSION }}
-      #     cache: true
-      #     cache-dependency-path: '**/packages.lock.json'
-      # - run: dotnet restore --locked-mode
-      # - run: |
-      #     cd src/Blank.Presentation
-      #     dotnet build --configuration Release --no-restore
-      # - run: |
-      #     dotnet test --logger trx --results-directory dotnet-test-results
-      # - uses: actions/upload-artifact@v4
-      #   with:
-      #       name: dotnet-test-results
-      #       path: dotnet-test-results
-      #       retention-days: 7
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
-      
-      - name: Build and Push Docker image
-        run: |
-          docker build --platform linux/amd64 --tag jeydo6/blank:latest .
-          docker save jeydo6/blank:latest | bzip2 | pv | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
-
-
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
-
-      # - name: Build Docker image
-      #   run: |
-      #     cd src/Blank.Presentation
-      #     docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker - . | ssh -o ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
-
-      # - name: Build Docker image
-      #   run: |
-      #     docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output - . | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
-          
-      # > 
-
-      # - name: Copy Docker image to remote server
-      #   run: |
-      #     docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
-
-      # - name: Run remote command
-      #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
-        # run: docker buildx build --file src/Blank.Presentation/Dockerfile --tag jeydo6/blank:latest --output - . > ssh root@production docker load
-
-      # - name: Run remote command
-      #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
+#name: action
+#
+#on:
+#  push:
+#    paths:
+#      - '**/workflows/*.yml'
+#      - '**.cs'
+#      - '**.csproj'
+#
+#env:
+#  DOTNET_VERSION: '8.x'
+#  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+#
+#jobs:
+#  build-and-test:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#      # - uses: actions/setup-dotnet@v4
+#      #   with:
+#      #     dotnet-version: ${{ env.DOTNET_VERSION }}
+#      #     cache: true
+#      #     cache-dependency-path: '**/packages.lock.json'
+#      # - run: dotnet restore --locked-mode
+#      # - run: |
+#      #     cd src/Blank.Presentation
+#      #     dotnet build --configuration Release --no-restore
+#      # - run: |
+#      #     dotnet test --logger trx --results-directory dotnet-test-results
+#      # - uses: actions/upload-artifact@v4
+#      #   with:
+#      #       name: dotnet-test-results
+#      #       path: dotnet-test-results
+#      #       retention-days: 7
+#
+#      - name: Setup SSH
+#        run: |
+#          mkdir -p ~/.ssh
+#          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
+#          chmod 600 ~/.ssh/id_ed25519
+#          ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
+#      
+#      - name: Build and Push Docker image
+#        run: |
+#          docker build --platform linux/amd64 --tag jeydo6/blank:latest .
+#          docker save jeydo6/blank:latest | bzip2 | pv | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+#
+#
+#      # - name: Set up Docker Buildx
+#      #   uses: docker/setup-buildx-action@v3
+#
+#      # - name: Build Docker image
+#      #   run: |
+#      #     cd src/Blank.Presentation
+#      #     docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output type=docker - . | ssh -o ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+#
+#      # - name: Build Docker image
+#      #   run: |
+#      #     docker buildx build --platform=linux/amd64 --tag jeydo6/blank:latest --output - . | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+#          
+#      # > 
+#
+#      # - name: Copy Docker image to remote server
+#      #   run: |
+#      #     docker save jeydo6/blank:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+#
+#      # - name: Run remote command
+#      #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
+#        # run: docker buildx build --file src/Blank.Presentation/Dockerfile --tag jeydo6/blank:latest --output - . > ssh root@production docker load
+#
+#      # - name: Run remote command
+#      #   run: ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'sudo touch ~/hello-from-github'
