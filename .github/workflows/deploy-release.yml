@@ -24,7 +24,6 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          echo ${{ github.ref_name }}
-          echo ${{ github.ref }}
-          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest .
+          version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
+          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number .
           docker save ${{ github.repository }}:latest | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
