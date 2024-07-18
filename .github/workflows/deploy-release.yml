@@ -7,12 +7,9 @@ on:
   push:
     branches:
       - 'release/**'
-        
-env:
-  DOCKER_IMAGES: ${{ github.workspace }}/docker/images
 
 jobs:
-  build-docker-image:
+  create-docker-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,7 +19,7 @@ jobs:
         run: |
           docker_image_name=$(echo ${{ github.repository }} | tr / _)
           version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
-          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number --output - . | bzip2 > ${{ env.DOCKER_IMAGES }}/$(docker_image_name)
+          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number --output - . | bzip2 > ${{ github.workspace }}/$(docker_image_name)
           
 #  push-docker-image:
 #    runs-on: ubuntu-latest
