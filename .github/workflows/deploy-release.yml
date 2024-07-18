@@ -15,25 +15,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Create Docker image
-        run: |
-          # Create Docker image
-          docker_image_name=$(echo ${{ github.repository }} | tr / _)
-          version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
-          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number --output - . | bzip2 > ${{ github.workspace }}/$docker_image_name
-          
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
-          
-      - name: Push Docker image
+
+      - name: Build and Push Docker image
         run: |
-          # Push Docker image
-          docker_image_name=$(echo ${{ github.repository }} | tr / _)
-          cat ${{ github.workspace }}/$docker_image_name | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }}:/${{ secrets.PRODUCTION_SSH_USER }}/downloads/
+          version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
+          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number .
+          docker tag ${{ github.repository }} ${{ github.repository }}
+          docker save ${{ github.repository }} | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+
+#      - name: Create Docker image
+#        run: |
+#          # Create Docker image
+#          docker_image_name=$(echo ${{ github.repository }} | tr / _)
+#          version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
+#          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number --output - . | bzip2 > ${{ github.workspace }}/$docker_image_name
+#          
+#      - name: Setup SSH
+#        run: |
+#          mkdir -p ~/.ssh
+#          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
+#          chmod 600 ~/.ssh/id_ed25519
+#          ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
+#          
+#      - name: Push Docker image
+#        run: |
+#          # Push Docker image
+#          docker_image_name=$(echo ${{ github.repository }} | tr / _)
+#          cat ${{ github.workspace }}/$docker_image_name | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
 
 #  build-and-push-docker-image:
 #    runs-on: ubuntu-latest
