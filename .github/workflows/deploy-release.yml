@@ -22,9 +22,22 @@ jobs:
         run: |
           docker_image_name=$(echo ${{ github.repository }} | tr / _)
           version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
-          echo ${{ env.DOCKER_IMAGES }}/${docker_image_name}
-#          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number --output - . > ${{ env.DOTNET_VERSION }}/$(docker_image_name)_$(version_number)
-
+          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number --output - . | bzip2 > ${{ env.DOCKER_IMAGES }}/$(docker_image_name)
+          
+#  push-docker-image:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Setup SSH
+#        run: |
+#          mkdir -p ~/.ssh
+#          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
+#          chmod 600 ~/.ssh/id_ed25519
+#          ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
+#      - name: Push Docker image
+#        run: |
+#          docker_image_name=$(echo ${{ github.repository }} | tr / _)
+#          docker save ${{ github.repository }} | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          
 #  build-and-push-docker-image:
 #    runs-on: ubuntu-latest
 #    steps:
