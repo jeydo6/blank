@@ -26,15 +26,16 @@ jobs:
       - name: Build and Push Docker image
         run: |
           # Build and Push Docker image
-          version_number=$(echo ${{ github.ref_name }} | cut -d'/' -f2)
-          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$version_number .
+          VERSION_NUMBER=$(echo $GITHUB_REF_NAME | cut -d'/' -f2)
+          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$VERSION_NUMBER .
           docker save ${{ github.repository }} | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
 
       - name: Run Docker image
         run: |
+          GITHUB_REPOSITORY_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} "
             docker run --detach \
-            --name ${{ github.repository }} \
+            --name $GITHUB_REPOSITORY_NAME \
             --network traefik-network \
             --env ASPNETCORE_ENVIRONMENT=Production \
             --env ASPNETCORE_HTTP_PORTS=5290 \
