@@ -32,7 +32,7 @@ jobs:
       - name: Push Docker image
         run: |
           docker_image_name=$(echo ${{ github.repository }} | tr / _)
-          cat ${{ github.workspace }}/$docker_image_name | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
+          cat ${{ github.workspace }}/$docker_image_name | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} 'bunzip2 | docker load'
 
 #  build-and-push-docker-image:
 #    runs-on: ubuntu-latest
