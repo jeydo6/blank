@@ -9,7 +9,7 @@ on:
       - 'release/**'
 
 jobs:
-  build-and-push-docker-image:
+  build-and-run-docker-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
