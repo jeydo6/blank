@@ -12,30 +12,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup SSH
+      - name: Build Docker image
         run: |
-          # Setup SSH
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PRODUCTION_SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.PRODUCTION_SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Build and Push Docker image
-        run: |
-          # Build and Push Docker image
+          # Build Docker image
           VERSION_NUMBER=$(echo $GITHUB_REF_NAME | cut -d'/' -f2)
           docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:$VERSION_NUMBER .
-          docker save ${{ github.repository }} | bzip2 | ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} docker load
-
-      - name: Run Docker image
-        run: |
-          GITHUB_REPOSITORY_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          ssh ${{ secrets.PRODUCTION_SSH_USER }}@${{ secrets.PRODUCTION_SSH_HOST }} "
-            docker run --detach \
-            --name $GITHUB_REPOSITORY_NAME \
-            --network traefik-network \
-            --env ASPNETCORE_ENVIRONMENT=Production \
-            --env ASPNETCORE_HTTP_PORTS=5290 \
-            --restart unless-stopped \
-            ${{ github.repository }}
-          "
