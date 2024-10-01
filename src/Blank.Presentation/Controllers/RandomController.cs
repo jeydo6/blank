@@ -14,4 +14,10 @@ public sealed class RandomController
         => ValueTask.FromResult(
             Random.Shared.Next(0, int.MaxValue)
         );
+
+    [HttpGet("delay")]
+    public Task GetRandomDelay(CancellationToken cancellationToken)
+        => Task.Delay(
+            Random.Shared.Next(10, 100), cancellationToken
+        );
 }
