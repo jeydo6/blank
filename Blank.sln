@@ -17,8 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blank.Tests", "tests\Blank.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{B3E497F0-0933-4114-A355-4998B2231C2E}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\build-backend.yml = .github\workflows\build-backend.yml
-		.github\workflows\deploy-release.yml = .github\workflows\deploy-release.yml
+		.github\workflows\production.yml = .github\workflows\production.yml
 	EndProjectSection
 EndProject
 Global
