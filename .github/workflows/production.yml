@@ -25,7 +25,7 @@ jobs:
           DOCKER_CONTAINER_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           docker run --detach --rm \
             --name $DOCKER_CONTAINER_NAME \
-            --publish ${{ secrets.PRODUCTION_LT_APP_PORT }}:${{ secrets.PRODUCTION_APP_PORT }}
+            --publish ${{ secrets.PRODUCTION_LT_APP_PORT }}:${{ secrets.PRODUCTION_APP_PORT }} \
             --env ASPNETCORE_ENVIRONMENT=Production \
             --env ASPNETCORE_HTTP_PORTS=${{ secrets.PRODUCTION_APP_PORT }} \
           $DOCKER_IMAGE_NAME
