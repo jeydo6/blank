@@ -20,6 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\production.yml = .github\workflows\production.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k6", "k6", "{DC69A9D0-C99D-41DB-B23F-9CFB5C89575B}"
+	ProjectSection(SolutionItems) = preProject
+		k6\randomNumber.js = k6\randomNumber.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,5 +44,6 @@ Global
 		{F91EA5A3-8B72-41DF-8837-9F52133C8077} = {AB679351-1786-4725-8127-7C1B6698FBB3}
 		{00CD4D61-4606-4651-B22C-CC1DC3087BA6} = {BAFCF695-0A21-4356-8034-29011AD5E81E}
 		{B3E497F0-0933-4114-A355-4998B2231C2E} = {393D2734-A2CB-4343-AAAA-AA13CB13A563}
+		{DC69A9D0-C99D-41DB-B23F-9CFB5C89575B} = {393D2734-A2CB-4343-AAAA-AA13CB13A563}
 	EndGlobalSection
 EndGlobal
