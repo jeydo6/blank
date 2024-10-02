@@ -33,15 +33,17 @@ jobs:
       - name: Run Load test
         run: |
           # Run Load test
+          REPORT_FOLDER_NAME=report_${GITHUB_RUN_ID}
+          mkdir $REPORT_FOLDER_NAME
           for script in k6/*.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
               --name k6 \
               --volume $(pwd)/k6:/k6 \
               --env K6_WEB_DASHBOARD=true \
-              --env K6_WEB_DASHBOARD_EXPORT=report_${GITHUB_RUN_ID}_${SCRIPT_NAME}.html \
+              --env K6_WEB_DASHBOARD_EXPORT=${REPORT_FOLDER_NAME}/${SCRIPT_NAME}.html \
               --env APP_PORT=${{ secrets.PRODUCTION_LT_APP_PORT }} \
-            grafana/k6:latest run $script
+            grafana/k6:latest run /$script
           done
 
       - name: Remove Docker image
