@@ -12,35 +12,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set GitHub Environment variables
+        run: |
+          # Set GitHub Environment variables
+          echo "DOCKER_IMAGE_NAME=${GITHUB_REPOSITORY}-lt:latest" >> $GITHUB_ENV
+          echo "DOCKER_CONTAINER_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f2)" >> $GITHUB_ENV
+          echo "REPORT_FOLDER_NAME=report_${GITHUB_RUN_ID}" >> $GITHUB_ENV
+          
+
       - name: Build Docker image
         run: |
           # Build Docker image
-          DOCKER_IMAGE_NAME=$GITHUB_REPOSITORY-lt:latest
-          docker build --platform linux/amd64 --tag $DOCKER_IMAGE_NAME .
+          docker build --platform linux/amd64 --tag ${{ env.DOCKER_IMAGE_NAME }} .
 
       - name: Run Docker image
         run: |
           # Run Docker image
-          DOCKER_IMAGE_NAME=$GITHUB_REPOSITORY-lt:latest
-          DOCKER_CONTAINER_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-
-          docker rm -f $DOCKER_CONTAINER_NAME
+          docker rm -f ${{ env.DOCKER_CONTAINER_NAME }}
           docker run --detach --rm \
-            --name $DOCKER_CONTAINER_NAME \
+            --name ${{ env.DOCKER_CONTAINER_NAME }} \
             --network k6-network \
             --env ASPNETCORE_ENVIRONMENT=Production \
             --env ASPNETCORE_HTTP_PORTS=${{ secrets.PRODUCTION_APP_PORT }} \
-          $DOCKER_IMAGE_NAME
+          ${{ env.DOCKER_IMAGE_NAME }}
 
       - name: Run Load test
         run: |
           # Run Load test
-          DOCKER_CONTAINER_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          APP_BASE_ADDRESS=http://${DOCKER_CONTAINER_NAME}:${{ secrets.PRODUCTION_APP_PORT }}
-          REPORT_FOLDER_NAME=report_${GITHUB_RUN_ID}
-
           cd k6
-          mkdir $REPORT_FOLDER_NAME
+          mkdir ${{ env.REPORT_FOLDER_NAME }}
           for script in *.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
@@ -49,23 +49,20 @@ jobs:
               --volume $(pwd):/k6 \
               --user $(id -u):$(id -g) \
               --env K6_WEB_DASHBOARD=true \
-              --env K6_WEB_DASHBOARD_EXPORT=/k6/${REPORT_FOLDER_NAME}/${SCRIPT_NAME}.html \
-              --env APP_BASE_ADDRESS=${APP_BASE_ADDRESS}\
+              --env K6_WEB_DASHBOARD_EXPORT=/k6/${{ env.REPORT_FOLDER_NAME }}/${SCRIPT_NAME}.html \
+              --env APP_BASE_ADDRESS=http://${{ env.DOCKER_CONTAINER_NAME }}:${{ secrets.PRODUCTION_APP_PORT }} \
             grafana/k6:latest run /k6/$script
           done
-          tar -cjvf ${REPORT_FOLDER_NAME}.tar.bz2 ${REPORT_FOLDER_NAME}
+          tar -cjvf ${{ env.REPORT_FOLDER_NAME }}.tar.bz2 ${{ env.REPORT_FOLDER_NAME }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${REPORT_FOLDER_NAME}
-          path: ${REPORT_FOLDER_NAME}
+          name: ${{ env.REPORT_FOLDER_NAME }}
+          path: ${{ env.REPORT_FOLDER_NAME }}.tar.bz2
           retention-days: 7
 
       - name: Remove Docker image
         run: |
           # Remove Docker image
-          DOCKER_IMAGE_NAME=$GITHUB_REPOSITORY-lt:latest
-          DOCKER_CONTAINER_NAME=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-
-          docker rm -f $DOCKER_CONTAINER_NAME
-          docker rmi -f $DOCKER_IMAGE_NAME
+          docker rm -f ${{ env.DOCKER_CONTAINER_NAME }}
+          docker rmi -f ${{ env.DOCKER_IMAGE_NAME }}
