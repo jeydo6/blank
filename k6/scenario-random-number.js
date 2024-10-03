@@ -49,7 +49,19 @@ export function handleSummary(data) {
         const response = http.post(url, body, {
             headers: headers
         });
+
+        if (response.status !== 200) {
+            console.error('Failed to push metrics', response.statusText);
+        }
     }
+
+    const filePath = __ENV.REPORT_FOLDER_NAME ?
+        `${__ENV.REPORT_FOLDER_NAME}/scenario-${scenario}.json` :
+        `scenario-${scenario}.json`;
+
+    return {
+        [filePath]: JSON.stringify(data)
+    };
 }
 
 function createHttpReqDurationMetrics(scenario, values) {
