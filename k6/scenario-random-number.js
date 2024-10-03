@@ -18,11 +18,12 @@ export default function() {
     sleep(1);
 }
 
-export async function handleSummary(data) {
+export function handleSummary(data) {
     if (!__ENV.PUSHGATEWAY_BASE_ADDRESS)
         throw new Error("Environment variable 'PUSHGATEWAY_BASE_ADDRESS' is not set");
 
     const jobName = __ENV.JOB_NAME || "k6_lt";
+    const instanceName = __ENV.INSTANCE_NAME || "stg";
     const scenario = "random-number";
 
     const metrics = [
@@ -31,7 +32,7 @@ export async function handleSummary(data) {
         ...createHttpReqFailedMetrics(scenario, data.metrics.http_req_failed.values)
     ];
 
-    const url = `${__ENV.PUSHGATEWAY_BASE_ADDRESS}/metrics/job/${jobName}`;
+    const url = `${__ENV.PUSHGATEWAY_BASE_ADDRESS}/metrics/job/${jobName}/instance/${instanceName}`;
     for (const metric of metrics) {
         const metricHeader = `# TYPE ${metric.name} ${metric.type}`;
         const metricData = createMetricData(
@@ -40,25 +41,14 @@ export async function handleSummary(data) {
             metric.value
         );
 
-        try {
-            const request = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain'
-                },
-                body: `${metricHeader}\n${metricData}`
-            };
+        const headers = {
+            'Content-Type': 'text/plain'
+        };
+        const body = `${metricHeader}\n${metricData}\n`;
 
-            const response = await fetch(url, request);
-
-            if (response.ok) {
-                console.log(`Metric '${metric.name}' successfully pushed`);
-            } else {
-                console.error('Failed to push the metric', response.statusText);
-            }
-        } catch (error) {
-            console.error(`Error sending metric ${metric.name}`);
-        }
+        const response = http.post(url, body, {
+            headers: headers
+        });
     }
 }
 
