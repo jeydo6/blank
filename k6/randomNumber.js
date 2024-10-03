@@ -10,9 +10,9 @@ export const options = {
     ]
 };
 
-const baseUrl = 'http://localhost:' + (__ENV.APP_PORT || '5290');
+const baseAddress = __ENV.APP_BASE_ADDRESS || 'http://localhost:5290';
 
 export default function() {
-    http.get(baseUrl + '/api/random/number');
+    http.get(baseAddress + '/api/random/number');
     sleep(1);
 }
