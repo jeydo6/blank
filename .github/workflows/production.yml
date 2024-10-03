@@ -43,7 +43,7 @@ jobs:
           mkdir $REPORT_FOLDER_NAME
           for script in *.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
-            docker run -i --rm \
+            docker run --rm \
               --name k6 \
               --network k6-network \
               --volume $(pwd):/k6 \
@@ -52,6 +52,12 @@ jobs:
               --env APP_BASE_ADDRESS=${APP_BASE_ADDRESS}\
             grafana/k6:latest run /k6/$script
           done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${REPORT_FOLDER_NAME}
+          path: ${REPORT_FOLDER_NAME}
+          retention-days: 7
 
       - name: Remove Docker image
         run: |
