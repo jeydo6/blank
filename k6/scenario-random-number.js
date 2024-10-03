@@ -55,12 +55,8 @@ export function handleSummary(data) {
         }
     }
 
-    const filePath = __ENV.REPORT_FOLDER_NAME ?
-        `${__ENV.REPORT_FOLDER_NAME}/scenario-${scenario}.json` :
-        `scenario-${scenario}.json`;
-
     return {
-        [filePath]: JSON.stringify(data)
+        stdout: JSON.stringify(data)
     };
 }
 
