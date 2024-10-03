@@ -17,10 +17,6 @@ internal static class Program
         var app = builder.Build();
 
         app.UseRouting();
-        app.UseCors(b => b
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
