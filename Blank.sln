@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k6", "k6", "{DC69A9D0-C99D-41DB-B23F-9CFB5C89575B}"
 	ProjectSection(SolutionItems) = preProject
-		k6\randomNumber.js = k6\randomNumber.js
+		k6\scenario-random-number.js = k6\scenario-random-number.js
 	EndProjectSection
 EndProject
 Global
