@@ -19,8 +19,8 @@ export default function() {
 }
 
 export async function handleSummary(data) {
-    if (!__ENV.PUSH_GATEWAY_BASE_ADDRESS)
-        throw new Error("Environment variable 'PUSH_GATEWAY_BASE_ADDRESS' is not set");
+    if (!__ENV.PUSHGATEWAY_BASE_ADDRESS)
+        throw new Error("Environment variable 'PUSHGATEWAY_BASE_ADDRESS' is not set");
 
     const jobName = __ENV.JOB_NAME || "k6_lt";
     const scenario = "random-number";
@@ -31,7 +31,7 @@ export async function handleSummary(data) {
         ...createHttpReqFailedMetrics(scenario, data.metrics.http_req_failed.values)
     ];
 
-    const url = `${__ENV.PUSH_GATEWAY_BASE_ADDRESS}/metrics/job/${jobName}`;
+    const url = `${__ENV.PUSHGATEWAY_BASE_ADDRESS}/metrics/job/${jobName}`;
     for (const metric of metrics) {
         const metricHeader = `# TYPE ${metric.name} ${metric.type}`;
         const metricData = createMetricData(
