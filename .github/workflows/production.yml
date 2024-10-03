@@ -53,6 +53,13 @@ jobs:
               --env APP_BASE_ADDRESS=${APP_BASE_ADDRESS}\
             grafana/k6:latest run /k6/$script
           done
+          tar -cjf /k6/${REPORT_FOLDER_NAME}.tar.bz2 /k6/${REPORT_FOLDER_NAME}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${REPORT_FOLDER_NAME}
+          path: ${REPORT_FOLDER_NAME}.tar.bz2
+          retention-days: 7
 
       - name: Remove Docker image
         run: |
