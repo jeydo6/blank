@@ -43,10 +43,11 @@ jobs:
           mkdir $REPORT_FOLDER_NAME
           for script in *.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
-            docker run \
+            docker run --rm \
               --name k6 \
               --network k6-network \
               --volume $(pwd):/k6 \
+              --user $(id -u):$(id -g) \
               --env K6_WEB_DASHBOARD=true \
               --env K6_WEB_DASHBOARD_EXPORT=/k6/${REPORT_FOLDER_NAME}/${SCRIPT_NAME}.html \
               --env APP_BASE_ADDRESS=${APP_BASE_ADDRESS}\
