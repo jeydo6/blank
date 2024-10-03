@@ -42,7 +42,7 @@ jobs:
           mkdir $REPORT_FOLDER_NAME
           for script in *.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
-            docker run -it --rm \
+            docker run -i --rm \
               --name k6 \
               --network k6-network \
               --volume $(pwd):/k6 \
