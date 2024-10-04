@@ -39,7 +39,7 @@ jobs:
       - name: Run Load test
         run: |
           # Run Load test
-          mkdir /k6/${{ env.REPORT_FOLDER_NAME }}
+          mkdir k6/${{ env.REPORT_FOLDER_NAME }}
           for script in /k6/scenario-*.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
