@@ -56,8 +56,8 @@ export function handleSummary(data) {
     }
 
     const filePath = __ENV.REPORT_FOLDER_NAME ?
-        `/k6/${__ENV.REPORT_FOLDER_NAME}/scenario-${scenario}.json` :
-        `/k6/report_/scenario-${scenario}.json`;
+        `k6/${__ENV.REPORT_FOLDER_NAME}/scenario-${scenario}.json` :
+        `k6/report_/scenario-${scenario}.json`;
 
     return {
         [filePath]: JSON.stringify(data)
