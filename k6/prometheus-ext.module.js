@@ -18,21 +18,7 @@ export default function() {
     sleep(1);
 }
 
-export function handleSummary(data) {
-    if (!__ENV.PUSHGATEWAY_BASE_ADDRESS)
-        throw new Error("Environment variable 'PUSHGATEWAY_BASE_ADDRESS' is not set");
-
-    const jobName = __ENV.JOB_NAME || "k6_lt";
-    const instanceName = __ENV.INSTANCE_NAME || "stg";
-    const scenario = "random-number";
-
-    const metrics = [
-        ...createHttpReqDurationMetrics(scenario, data.metrics.http_req_duration.values),
-        ...createHttpReqsMetrics(scenario, data.metrics.http_reqs.values),
-        ...createHttpReqFailedMetrics(scenario, data.metrics.http_req_failed.values)
-    ];
-
-    const url = `${__ENV.PUSHGATEWAY_BASE_ADDRESS}/metrics/job/${jobName}/instance/${instanceName}`;
+export function pushMetrics(url, metrics) {
     for (const metric of metrics) {
         const metricHeader = `# TYPE ${metric.name} ${metric.type}`;
         const metricData = createMetricData(
@@ -54,6 +40,14 @@ export function handleSummary(data) {
             console.error('Failed to push metrics', response.statusText);
         }
     }
+}
+
+export function createMetrics(scenario, metrics) {
+    return [
+        ...createHttpReqDurationMetrics(scenario, metrics.http_req_duration.values),
+        ...createHttpReqsMetrics(scenario, metrics.http_reqs.values),
+        ...createHttpReqFailedMetrics(scenario, metrics.http_req_failed.values)
+    ];
 }
 
 function createHttpReqDurationMetrics(scenario, values) {
