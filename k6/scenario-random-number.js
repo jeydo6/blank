@@ -5,7 +5,7 @@ export const options = {
     vus: 0,
     stages: [
         { duration: '5s', target: 10 },
-        { duration: '5s', target: 100 },
+        { duration: '50s', target: 100 },
         { duration: '5s', target: 0 }
     ]
 };
@@ -54,14 +54,6 @@ export function handleSummary(data) {
             console.error('Failed to push metrics', response.statusText);
         }
     }
-
-    const filePath = __ENV.REPORT_FOLDER_NAME ?
-        `/k6/${__ENV.REPORT_FOLDER_NAME}/scenario-${scenario}.json` :
-        `/k6/report_/scenario-${scenario}.json`;
-
-    return {
-        [filePath]: JSON.stringify(data)
-    };
 }
 
 function createHttpReqDurationMetrics(scenario, values) {

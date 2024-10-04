@@ -47,7 +47,8 @@ jobs:
               --network k6-network \
               --volume $(pwd)/k6:/k6 \
               --user $(id -u):$(id -g) \
-              --env REPORT_FOLDER_NAME=${{ env.REPORT_FOLDER_NAME }} \
+              --env K6_WEB_DASHBOARD=true \
+              --env K6_WEB_DASHBOARD_EXPORT=/k6/${{ env.REPORT_FOLDER_NAME }}/${SCRIPT_NAME}.html \
               --env APP_BASE_ADDRESS=http://${{ env.DOCKER_CONTAINER_NAME }}:${{ secrets.PRODUCTION_APP_PORT }} \
               --env PUSHGATEWAY_BASE_ADDRESS=${{ secrets.PRODUCTION_PUSHGATEWAY_BASE_ADDRESS }} \
             grafana/k6:latest run /$script
