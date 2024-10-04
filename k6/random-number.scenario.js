@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
-import { createMetrics, pushMetrics } from "./prometheus-ext.module";
+import { createMetrics, pushMetrics } from "./prometheus-ext.module.js";
 
 export const options = {
     vus: 0,
