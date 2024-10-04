@@ -50,7 +50,7 @@ jobs:
               --env REPORT_FOLDER_NAME=${{ env.REPORT_FOLDER_NAME }} \
               --env APP_BASE_ADDRESS=http://${{ env.DOCKER_CONTAINER_NAME }}:${{ secrets.PRODUCTION_APP_PORT }} \
               --env PUSHGATEWAY_BASE_ADDRESS=${{ secrets.PRODUCTION_PUSHGATEWAY_BASE_ADDRESS }} \
-            grafana/k6:latest run /$script
+            grafana/k6:latest ls && run /$script
           done
 
       - uses: actions/upload-artifact@v4
