@@ -39,20 +39,18 @@ jobs:
       - name: Run Load test
         run: |
           # Run Load test
-          cd k6
-          mkdir ${{ env.REPORT_FOLDER_NAME }}
-          for script in scenario-*.js; do
+          mkdir /k6/${{ env.REPORT_FOLDER_NAME }}
+          for script in /k6/scenario-*.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
               --name k6 \
               --network k6-network \
-              --volume $(pwd):/k6 \
+              --volume $(pwd)/k6:/k6 \
               --user $(id -u):$(id -g) \
-              --env K6_WEB_DASHBOARD=true \
               --env REPORT_FOLDER_NAME=${{ env.REPORT_FOLDER_NAME }} \
               --env APP_BASE_ADDRESS=http://${{ env.DOCKER_CONTAINER_NAME }}:${{ secrets.PRODUCTION_APP_PORT }} \
               --env PUSHGATEWAY_BASE_ADDRESS=${{ secrets.PRODUCTION_PUSHGATEWAY_BASE_ADDRESS }} \
-            grafana/k6:latest run /k6/$script > /k6/${{ env.REPORT_FOLDER_NAME }}/${SCRIPT_NAME}.txt
+            grafana/k6:latest run /$script
           done
 
       - uses: actions/upload-artifact@v4
