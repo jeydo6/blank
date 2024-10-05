@@ -39,7 +39,7 @@ jobs:
       - name: Run Load test
         run: |
           # Run Load test
-          cd k6 && mkdir ${{ env.REPORT_FOLDER_NAME }}
+          cd k6 && mkdir report
           for script in *.scenario.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
@@ -49,16 +49,19 @@ jobs:
               --volume $(pwd):/k6 \
               --workdir /k6 \
               --env K6_WEB_DASHBOARD=true \
-              --env K6_WEB_DASHBOARD_EXPORT=${{ env.REPORT_FOLDER_NAME }}/${SCRIPT_NAME}.html \
+              --env K6_WEB_DASHBOARD_EXPORT=report/${SCRIPT_NAME}.report.html \
               --env APP_BASE_ADDRESS=http://${{ env.DOCKER_CONTAINER_NAME }}:${{ secrets.PRODUCTION_APP_PORT }} \
-              --env PUSHGATEWAY_BASE_ADDRESS=${{ secrets.PRODUCTION_PUSHGATEWAY_BASE_ADDRESS }} \
             grafana/k6:latest run $script
           done
+          PUSHGATEWAY_BASE_ADDRESS=${{ secrets.PRODUCTION_PUSHGATEWAY_BASE_ADDRESS }} \
+          JOB_NAME=k6 \
+          INSTANCE_NAME=stg \
+          python3 push_metrics.py
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.REPORT_FOLDER_NAME }}
-          path: k6/${{ env.REPORT_FOLDER_NAME }}
+          name: report_${GITHUB_RUN_ID}
+          path: k6/report
           retention-days: 7
 
       - name: Remove Docker image

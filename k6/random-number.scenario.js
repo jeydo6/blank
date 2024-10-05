@@ -1,6 +1,5 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
-import { createMetrics, pushMetrics } from "./prometheus-ext.module.js";
 
 export const options = {
     vus: 0,
@@ -20,15 +19,8 @@ export default function() {
 }
 
 export function handleSummary(data) {
-    if (!__ENV.PUSHGATEWAY_BASE_ADDRESS)
-        throw new Error("Environment variable 'PUSHGATEWAY_BASE_ADDRESS' is not set");
-
     const scenario = "random-number";
-    const jobName = __ENV.JOB_NAME || "k6_lt";
-    const instanceName = __ENV.INSTANCE_NAME || "stg";
-
-    const metrics = createMetrics(scenario, data.metrics);
-
-    const url = `${__ENV.PUSHGATEWAY_BASE_ADDRESS}/metrics/job/${jobName}/instance/${instanceName}`;
-    pushMetrics(url, metrics);
+    return {
+        [`report/${scenario}.report.json`]: JSON.stringify(data)
+    }
 }
