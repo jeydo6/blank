@@ -18,19 +18,23 @@ export default function() {
     sleep(1);
 }
 
-export function pushMetrics(url, metrics) {
-    for (const metric of metrics) {
-        const metricHeader = `# TYPE ${metric.name} ${metric.type}`;
-        const metricData = createMetricData(
-            metric.name,
-            metric.labels,
-            metric.value
-        );
+export function pushMetrics(url, metricGroups) {
+    for (const metricGroup of metricGroups) {
+        const bodyLines = [ `# TYPE ${metricGroup.name} ${metricGroup.type}` ];
+        for (const metric of metricGroup.data) {
+            const bodyLine = createMetricData(
+                metricGroup.name,
+                metric.labels,
+                metric.value
+            );
+
+            bodyLines.push(bodyLine);
+        }
 
         const headers = {
             'Content-Type': 'text/plain'
         };
-        const body = `${metricHeader}\n${metricData}\n`;
+        const body = bodyLines.join('\n') + '\n';
 
         const response = http.post(url, body, {
             headers: headers
@@ -44,9 +48,9 @@ export function pushMetrics(url, metrics) {
 
 export function createMetrics(scenario, metrics) {
     return [
-        ...createHttpReqDurationMetrics(scenario, metrics.http_req_duration.values),
-        ...createHttpReqsMetrics(scenario, metrics.http_reqs.values),
-        ...createHttpReqFailedMetrics(scenario, metrics.http_req_failed.values)
+        createHttpReqDurationMetrics(scenario, metrics.http_req_duration.values),
+        createHttpReqsMetrics(scenario, metrics.http_reqs.values),
+        createHttpReqFailedMetrics(scenario, metrics.http_req_failed.values)
     ];
 }
 
@@ -54,51 +58,41 @@ function createHttpReqDurationMetrics(scenario, values) {
 
     const metricName = "k6_http_req_duration";
     const metricType = "gauge";
-    
-    const metricNameLabel = "http_req_duration";
 
-    return [
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "avg"
+    return {
+        name: metricName,
+        type: metricType,
+        data: [
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "avg"
+                },
+                value: values["avg"]
             },
-            value: values["avg"]
-        },
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "med"
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "med"
+                },
+                value: values["med"]
             },
-            value: values["med"]
-        },
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "p90"
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "p90"
+                },
+                value: values["p(90)"]
             },
-            value: values["p(90)"]
-        },
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "p95"
-            },
-            value: values["p(95)"]
-        }
-    ];
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "p95"
+                },
+                value: values["p(95)"]
+            }
+        ]
+    };
 }
 
 function createHttpReqsMetrics(scenario, values) {
@@ -108,28 +102,26 @@ function createHttpReqsMetrics(scenario, values) {
 
     const metricNameLabel = "http_reqs";
 
-    return [
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "count"
+    return {
+        name: metricName,
+        type: metricType,
+        data: [
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "count"
+                },
+                value: values["count"]
             },
-            value: values["count"]
-        },
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "rate"
-            },
-            value: values["rate"]
-        }
-    ];
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "rate"
+                },
+                value: values["rate"]
+            }
+        ]
+    };
 }
 
 function createHttpReqFailedMetrics(scenario, values) {
@@ -137,20 +129,19 @@ function createHttpReqFailedMetrics(scenario, values) {
     const metricName = "k6_http_req_failed";
     const metricType = "gauge";
 
-    const metricNameLabel = "http_req_failed";
-
-    return [
-        {
-            name: metricName,
-            type: metricType,
-            labels: {
-                scenario: scenario,
-                name: metricNameLabel,
-                type: "rate"
-            },
-            value: values["rate"]
-        }
-    ];
+    return {
+        name: metricName,
+        type: metricType,
+        data: [
+            {
+                labels: {
+                    scenario: scenario,
+                    type: "rate"
+                },
+                value: values["rate"]
+            }
+        ]
+    };
 }
 
 function createMetricData(metricsName, metricsLabels, metricsValue) {
