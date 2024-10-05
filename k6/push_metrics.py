@@ -7,11 +7,12 @@ import urllib.error
 def read_metrics():
     result = []
 
-    pattern = "report/*.report.json"
-    file_paths = glob.glob(pattern)
+    directory = "report"
+    pattern = "*.report.json"
+    file_paths = glob.glob(f"{directory}/{pattern}")
     for file_path in file_paths:
         try:
-            scenario = file_path[:-(len(pattern) - 1)]
+            scenario = file_path[len(directory) + 1:-(len(pattern) - 1)]
             with open(file_path, "r", encoding="utf-8") as file:
                 json_obj = json.load(file)
                 json_obj["scenario"] = scenario
