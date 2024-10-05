@@ -44,6 +44,7 @@ jobs:
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
               --name k6 \
+              --publish 5665:5665 \
               --network k6-network \
               --user $(id -u):$(id -g) \
               --volume $(pwd):/k6 \
