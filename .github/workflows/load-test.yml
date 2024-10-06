@@ -22,11 +22,11 @@ jobs:
         run: |
           # Run Load test
           cd k6 && mkdir report
+          docker rm -f k6
           for script in *.scenario.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             docker run --rm \
               --name k6 \
-              --publish 127.0.0.1:5665:5665 \
               --network host \
               --user $(id -u):$(id -g) \
               --volume $(pwd):/k6 \
