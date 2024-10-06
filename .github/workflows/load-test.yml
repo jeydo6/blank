@@ -34,11 +34,11 @@ jobs:
               --env K6_WEB_DASHBOARD=true \
               --env K6_WEB_DASHBOARD_EXPORT=report/${SCRIPT_NAME}.report.html \
               --env APP_BASE_ADDRESS=${APP_BASE_ADDRESS} \
-            grafana/k6:latest run $script
+            grafana/k6 run $script
           done
           PUSHGATEWAY_BASE_ADDRESS=${PUSHGATEWAY_BASE_ADDRESS} \
           JOB_NAME=k6 \
-          INSTANCE_NAME= ${DOCKER_CONTAINER_NAME}\
+          INSTANCE_NAME=${DOCKER_CONTAINER_NAME} \
           python3 push_metrics.py
 
       - uses: actions/upload-artifact@v4
