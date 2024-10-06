@@ -59,7 +59,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: report_${{ github.run.id }}
+          name: report_${{ github.run_id }}
           path: k6/report
           retention-days: 7
 
