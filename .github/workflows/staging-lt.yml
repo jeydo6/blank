@@ -1,4 +1,4 @@
-name: staging
+name: staging-lt
 
 on:
   workflow_dispatch:
@@ -47,6 +47,7 @@ jobs:
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
             K6_WEB_DASHBOARD=true \
             K6_WEB_DASHBOARD_EXPORT=report/${SCRIPT_NAME}.report.html \
+            APP_BASE_ADDRESS=http://${{ secrets.STAGING_HOST }}:${{ secrets.STAGING_LT_APP_PORT }} \
             k6 run $script
           done
 

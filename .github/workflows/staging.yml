@@ -32,6 +32,7 @@ jobs:
           # Build and Push Docker image
           docker build --platform linux/amd64 --tag ${{ env.DOCKER_IMAGE_NAME }}:latest --tag ${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION_NUMBER }} .
           docker save ${{ env.DOCKER_IMAGE_NAME }} | bzip2 | ssh ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_HOST }} docker load
+          docker image prune -f
 
       - name: Run Docker image
         run: |
