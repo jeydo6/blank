@@ -51,9 +51,9 @@ jobs:
             k6 run $script
           done
 
-          PUSHGATEWAY_BASE_ADDRESS=${PUSHGATEWAY_BASE_ADDRESS} \
+          PUSHGATEWAY_BASE_ADDRESS=${{ env.PUSHGATEWAY_BASE_ADDRESS }} \
           JOB_NAME=k6 \
-          INSTANCE_NAME=${DOCKER_CONTAINER_NAME} \
+          INSTANCE_NAME=${{ env.DOCKER_CONTAINER_NAME }} \
           python3 push_metrics.py
 
       - uses: actions/upload-artifact@v4
