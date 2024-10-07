@@ -18,13 +18,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{B3E497F0-0933-4114-A355-4998B2231C2E}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\staging.yml = .github\workflows\staging.yml
-		.github\workflows\load-test.yml = .github\workflows\load-test.yml
+		.github\workflows\staging-lt.yml = .github\workflows\staging-lt.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k6", "k6", "{DC69A9D0-C99D-41DB-B23F-9CFB5C89575B}"
 	ProjectSection(SolutionItems) = preProject
 		k6\random-delay.scenario.js = k6\random-delay.scenario.js
 		k6\random-number.scenario.js = k6\random-number.scenario.js
+		k6\push_metrics.py = k6\push_metrics.py
 	EndProjectSection
 EndProject
 Global

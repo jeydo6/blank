@@ -1,7 +1,5 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG TARGETARCH
@@ -18,6 +16,7 @@ RUN dotnet build "src/Blank.Presentation/Blank.Presentation.csproj" -c $BUILD_CO
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+
 RUN dotnet publish "src/Blank.Presentation/Blank.Presentation.csproj" -c $BUILD_CONFIGURATION -a $TARGETARCH --no-restore -o publish /p:UseAppHost=false
 
 FROM base AS final

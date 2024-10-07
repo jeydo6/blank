@@ -6,7 +6,7 @@ on:
       - 'release/**'
 
 jobs:
-  build-and-run-docker-image:
+  main:
     runs-on: self-hosted
     steps:
       - name: Set GitHub Environment variables
@@ -30,8 +30,8 @@ jobs:
       - name: Build and Push Docker image
         run: |
           # Build and Push Docker image
-          docker build --platform linux/amd64 --tag ${{ github.repository }}:latest --tag ${{ github.repository }}:${{ env.VERSION_NUMBER }} .
-          docker save ${{ github.repository }} | bzip2 | ssh ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_HOST }} docker load
+          docker build --platform linux/amd64 --tag ${{ env.DOCKER_IMAGE_NAME }}:latest --tag ${{ env.DOCKER_IMAGE_NAME }}:${{ env.VERSION_NUMBER }} .
+          docker save ${{ env.DOCKER_IMAGE_NAME }} | bzip2 | ssh ${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_HOST }} docker load
 
       - name: Run Docker image
         run: |
@@ -44,5 +44,5 @@ jobs:
           --env ASPNETCORE_ENVIRONMENT=Staging \
           --env ASPNETCORE_HTTP_PORTS=${{ secrets.STAGING_APP_PORT }} \
           --restart unless-stopped \
-          ${{ github.repository }}
+          ${{ env.DOCKER_IMAGE_NAME }}
           EOF
