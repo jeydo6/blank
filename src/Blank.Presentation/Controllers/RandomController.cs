@@ -16,8 +16,8 @@ public sealed class RandomController
         );
 
     [HttpGet("delay")]
-    public Task GetRandomDelay(CancellationToken cancellationToken)
-        => Task.Delay(
-            Random.Shared.Next(50, 500), cancellationToken
+    public async Task GetRandomDelay(CancellationToken cancellationToken)
+        => await Task.Delay(
+            Random.Shared.Next(100, 500), cancellationToken
         );
 }
