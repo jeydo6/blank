@@ -11,8 +11,8 @@ jobs:
       - name: Set GitHub Environment variables
         run: |
           # Set GitHub Environment variables
-          echo "APP_BASE_ADDRESS=http://${{ secrets.STAGING_APP_HOST }}:${{ secrets.STAGING_APP_PORT }}" >> $GITHUB_ENV
-          echo "PUSHGATEWAY_BASE_ADDRESS=http://${{ secrets.STAGING_PUSHGATEWAY_HOST }}:${{ secrets.STAGING_PUSHGATEWAY_PORT }}" >> $GITHUB_ENV
+          echo "APP_BASE_ADDRESS=http://${{ secrets.STAGING_HOST }}:${{ secrets.STAGING_APP_PORT }}" >> $GITHUB_ENV
+          echo "PUSHGATEWAY_BASE_ADDRESS=http://${{ secrets.STAGING_HOST }}:${{ secrets.STAGING_PUSHGATEWAY_PORT }}" >> $GITHUB_ENV
           echo "DOCKER_CONTAINER_NAME=$(echo ${GITHUB_REPOSITORY} | cut -d'/' -f2)" >> $GITHUB_ENV
 
       - name: Checkout
@@ -22,20 +22,14 @@ jobs:
         run: |
           # Run Load test
           cd k6 && mkdir report
-          docker rm -f k6
+
           for script in *.scenario.js; do
             SCRIPT_NAME=$(echo $script | cut -d'/' -f2 | cut -d'.' -f1)
-            docker run --rm \
-              --name k6 \
-              --network host \
-              --user $(id -u):$(id -g) \
-              --volume $(pwd):/k6 \
-              --workdir /k6 \
-              --env K6_WEB_DASHBOARD=true \
-              --env K6_WEB_DASHBOARD_EXPORT=report/${SCRIPT_NAME}.report.html \
-              --env APP_BASE_ADDRESS=${APP_BASE_ADDRESS} \
-            grafana/k6 run $script
+            K6_WEB_DASHBOARD=true \
+            K6_WEB_DASHBOARD_EXPORT=report/${SCRIPT_NAME}.report.html \
+            k6 run $script
           done
+
           PUSHGATEWAY_BASE_ADDRESS=${PUSHGATEWAY_BASE_ADDRESS} \
           JOB_NAME=k6 \
           INSTANCE_NAME=${DOCKER_CONTAINER_NAME} \
