@@ -1,9 +1,6 @@
 name: staging-lt
 
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 1 * * *'
+on: workflow_dispatch
 jobs:
   main:
     runs-on: self-hosted
